@@ -8,7 +8,6 @@ Supplementary materials for the paper submitted to CCS 2026.
 - **Detailed Rubrics.pdf**: Scoring rubrics for all assessment dimensions and vulnerability types.
 - **Codebook.pdf**: Qualitative codebook for open-ended response coding.
 - **Variable Table.pdf**: Behavioral variables used in the learning activities analysis.
-- **Interface.pdf**: Screenshots of the study interfaces.
 - **Code Snippets/**: Pre/post-test code snippet stimuli. See README inside for details.
 - **PlainLLM-VulnScaffold/**: Materials for the VulnScaffold system.
 
