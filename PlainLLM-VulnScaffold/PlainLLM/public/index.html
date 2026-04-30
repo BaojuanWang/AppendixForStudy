@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learn with ChatGPT</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+
+:root {
+  --bg: #f4f3ef;
+  --surface: #fff;
+  --surface2: #efede7;
+  --border: #dddbd3;
+  --text: #1a1916;
+  --muted: #7a7870;
+  --accent: #2d5be3;
+  --mono: 'IBM Plex Mono', monospace;
+  --sans: 'IBM Plex Sans', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+  display: flex;
+  flex-direction: column;
+}
+
+/* TOPBAR */
+.topbar {
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  height: 46px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.logo {
+  font-family: var(--mono);
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: -0.3px;
+}
+
+/* LAYOUT */
+.layout {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* LEFT SIDEBAR — empty */
+.sidebar-left {
+  width: 186px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+}
+
+/* RIGHT SIDEBAR — empty */
+.sidebar-right {
+  width: 186px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+}
+
+/* CHAT WRAPPER */
+.chat-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* CHAT MESSAGES */
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* USER bubble */
+.mu {
+  display: flex;
+  justify-content: flex-end;
+}
+.mu-bubble {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 14px 14px 4px 14px;
+  padding: 9px 14px;
+  max-width: 68%;
+  font-size: 13.5px;
+  line-height: 1.55;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+/* ASSISTANT bubble */
+.ma {
+  display: flex;
+  max-width: 88%;
+}
+.ma-bubble {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13.5px;
+  line-height: 1.72;
+  word-wrap: break-word;
+  width: 100%;
+}
+
+/* THINKING */
+.thinking {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.thinking span {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--muted);
+  animation: blink 1.2s infinite;
+}
+.thinking span:nth-child(2) { animation-delay: 0.2s; }
+.thinking span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink {
+  0%, 80%, 100% { opacity: 0.2; }
+  40% { opacity: 1; }
+}
+
+/* INPUT AREA */
+.input-area {
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  padding: 10px 18px 12px;
+}
+.input-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+.cinput {
+  flex: 1;
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  padding: 8px 12px;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  outline: none;
+  background: var(--surface);
+  resize: none;
+  min-height: 40px;
+  max-height: 110px;
+  line-height: 1.6;
+  color: var(--text);
+  transition: border-color 0.15s;
+}
+.cinput:focus { border-color: var(--accent); }
+.cinput::placeholder { color: var(--muted); }
+
+.sbtn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  height: 40px;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.sbtn:hover:not(:disabled) { background: #1e4bc4; }
+.sbtn:disabled { background: #aab8f0; cursor: not-allowed; }
+
+/* MARKDOWN */
+.ma-bubble p { margin-bottom: 6px; }
+.ma-bubble p:last-child { margin-bottom: 0; }
+.ma-bubble code {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--surface2);
+  border-radius: 3px;
+  padding: 1px 4px;
+}
+.ma-bubble pre {
+  background: #141414;
+  border-radius: 6px;
+  padding: 8px 11px;
+  margin: 6px 0;
+  overflow-x: auto;
+}
+.ma-bubble pre code {
+  background: none;
+  color: #a6e3a1;
+  font-size: 11.5px;
+  padding: 0;
+}
+.ma-bubble ul, .ma-bubble ol { margin: 5px 0 0 17px; }
+.ma-bubble li { margin-bottom: 3px; }
+.ma-bubble strong { font-weight: 600; }
+.ma-bubble h1, .ma-bubble h2, .ma-bubble h3 {
+  font-weight: 600;
+  margin: 8px 0 4px;
+  line-height: 1.4;
+}
+
+/* APPEAR */
+@keyframes fin {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.appear { animation: fin 0.22s ease; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="logo">Learn with ChatGPT</span>
+</div>
+
+<div class="layout">
+
+  <div class="sidebar-left"></div>
+
+  <div class="chat-wrapper">
+    <div class="chat-messages" id="msgs"></div>
+    <div class="input-area">
+      <div class="input-row">
+        <textarea class="cinput" id="cin" placeholder="Ask about a vulnerability..." rows="1"
+          oninput="ar(this)" onkeydown="handleKey(event)"></textarea>
+        <button class="sbtn" id="sbtn" onclick="send()">Send</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-right"></div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<script>
+var chatHistory = [];
+var busy = false;
+
+function $(id){ return document.getElementById(id); }
+
+function ar(el){
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 110) + 'px';
+}
+
+function sb(){
+  var c = $('msgs');
+  setTimeout(function(){ c.scrollTop = c.scrollHeight; }, 60);
+}
+
+function setBusy(v){
+  busy = v;
+  $('sbtn').disabled = v;
+  $('cin').disabled = v;
+}
+
+function handleKey(e){
+  if(e.key === 'Enter' && !e.shiftKey){
+    e.preventDefault();
+    send();
+  }
+}
+
+function send(){
+  var inp = $('cin');
+  var text = inp.value.trim();
+  if(!text || busy) return;
+
+  inp.value = '';
+  inp.style.height = 'auto';
+  appendUser(text);
+  chatHistory.push({ role: 'user', content: text });
+  setBusy(true);
+
+  var thinkEl = appendThink();
+
+  var busyTimer = setTimeout(function(){
+    if(busy){ setBusy(false); thinkEl.remove(); appendErr('Response timed out. Please try again.'); }
+  }, 30000);
+
+  fetch('https://vuln-tool-server-itgi3.ondigitalocean.app/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages: chatHistory })
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    clearTimeout(busyTimer);
+    thinkEl.remove();
+    var reply = data.reply || '';
+    chatHistory.push({ role: 'assistant', content: reply });
+    appendAssistant(reply);
+  })
+  .catch(function(e){
+    clearTimeout(busyTimer);
+    thinkEl.remove();
+    appendErr('Network error: ' + e.message);
+    chatHistory.pop();
+  })
+  .finally(function(){ setBusy(false); });
+}
+
+function appendUser(text){
+  var el = document.createElement('div');
+  el.className = 'mu appear';
+  el.innerHTML = '<div class="mu-bubble">' + esc(text) + '</div>';
+  $('msgs').appendChild(el);
+  sb();
+}
+
+function appendAssistant(text){
+  var el = document.createElement('div');
+  el.className = 'ma appear';
+  var html = marked.parse(text);
+  el.innerHTML = '<div class="ma-bubble">' + html + '</div>';
+  $('msgs').appendChild(el);
+  sb();
+}
+
+function appendThink(){
+  var el = document.createElement('div');
+  el.className = 'ma appear';
+  el.innerHTML = '<div class="ma-bubble"><div class="thinking"><span></span><span></span><span></span> Thinking...</div></div>';
+  $('msgs').appendChild(el);
+  sb();
+  return el;
+}
+
+function appendErr(msg){
+  var el = document.createElement('div');
+  el.className = 'ma appear';
+  el.innerHTML = '<div class="ma-bubble" style="color:#be123c;">⚠ ' + esc(msg) + '</div>';
+  $('msgs').appendChild(el);
+  sb();
+}
+
+function esc(s){
+  return String(s)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
+}
+
+window.addEventListener('beforeunload', function(e){
+  e.preventDefault();
+  e.returnValue = '';
+});
+</script>
+</body>
+</html>
