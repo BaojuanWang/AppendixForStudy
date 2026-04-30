@@ -9,6 +9,6 @@ Supplementary materials for the paper submitted to CCS 2026.
 - **Codebook.pdf**: Qualitative codebook for open-ended response coding.
 - **Variable Table.pdf**: Behavioral variables used in the learning activities analysis.
 - **Code Snippets/**: Pre/post-test code snippet stimuli. See README inside for details.
-- **PlainLLM-VulnScaffold/**: Materials for the VulnScaffold system.
+- **PlainLLM-VulnScaffold/**: Materials for both the plain LLM and VulnScaffold.
 
 Raw participant data are not shared to protect participant privacy.
